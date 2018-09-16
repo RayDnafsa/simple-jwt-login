@@ -20,6 +20,7 @@ mongoose.Promise = bluebird;
 mongoose.connect('mongodb://localhost/' + process.env.MONGODB_URL, {
   useNewUrlParser: true
 });
+mongoose.set('useCreateIndex', true);
 
 // cors setup
 app.use(function (req, res, next) {
