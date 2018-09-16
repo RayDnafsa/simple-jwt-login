@@ -10,7 +10,8 @@ var UserSchema = new mongoose.Schema({
         trim: true
     },
     hash: String
-});
+},
+{timestamps: true});
 
 UserSchema.methods.setPassword = function(password) {
     var hash = bcrypt.hashSync(password, 10);
