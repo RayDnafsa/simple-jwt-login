@@ -16,6 +16,13 @@ module.exports.register = async function (req, res) {
         res.json(validatorInstance.errors);
         return;
     }
+    if(!(req.body.password === req.body.confirm_password)) {
+        res.status(400);
+        res.json({
+            message: "Passwords do not match",
+        });
+        return;
+    }
 
     var user = new User();
 
