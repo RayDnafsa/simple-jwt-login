@@ -1,9 +1,22 @@
 var mongoose = require('mongoose');
 var passport = require('passport');
+var validator = require('node-input-validator');
 var User = mongoose.model('User');
 
-// TODO: validate and sanitize input
+var validatorSettings = {
+    username: 'required|minLength:8',
+    password: 'required|minLength:8'
+};
+
 module.exports.register = async function (req, res) {
+    var validatorInstance = new validator(req.body, validatorSettings);
+    var matched = await validatorInstance.check();
+    if(!matched) {
+        res.status(400);
+        res.json(validatorInstance.errors);
+        return;
+    }
+
     var user = new User();
 
     user.username = req.body.username;
@@ -24,6 +37,14 @@ module.exports.register = async function (req, res) {
 }
 
 module.exports.login = async function (req, res) {
+    var validatorInstance = new validator(req.body, validatorSettings);
+    var matched = await validatorInstance.check();
+    if(!matched) {
+        res.status(400);
+        res.json(validatorInstance.errors);
+        return;
+    }
+
     passport.authenticate('local', function (err, user, info) {
         var token;
 
@@ -45,6 +66,14 @@ module.exports.login = async function (req, res) {
 }
 
 module.exports.patch = async function (req, res) {
+    var validatorInstance = new validator(req.body, validatorSettings);
+    var matched = await validatorInstance.check();
+    if(!matched) {
+        res.status(400);
+        res.json(validatorInstance.errors);
+        return;
+    }
+
     var user = User.findOne({
         'username': req.decoded.username
     }).then(async user => {
